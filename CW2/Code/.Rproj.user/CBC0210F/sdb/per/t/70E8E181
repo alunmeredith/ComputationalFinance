@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(fOptions)\nlibrary(dplyr)\n#load(\"tidy_data.RData\")\n\nt_mat = max(asset$date) + 1\nr = 0.06\n\ntemp <- vector()\nfor (ii in 1:nrow(tidy_data)) {\n    temp[ii] <- GBSOption(\n        TypeFlag = tidy_data[ii,]$putcall,\n        S = tidy_data[ii,]$asset_value,\n        X = tidy_data[ii,]$strike_price,\n        Time = (t_mat - tidy_data[ii,]$date) / 365,\n        r = r,\n        sigma = tidy_data[ii,]$volatility,\n        b = 0\n    )@price\n}\ntidy_data$fOption_estimate <- temp\n\n# Implied volatility\nimplied <- vector()\nfor (i in 1:nrow(tidy_data)) {\n    implied[i] <- GBSVolatility(\n        price = tidy_data[[i,\"option_price\"]],\n        TypeFlag = as.character(tidy_data[[i, \"putcall\"]]),\n        S = tidy_data[[i, \"asset_value\"]],\n        X = tidy_data[[i, \"strike_price\"]],\n        Time = (t_mat - tidy_data[[i, \"date\"]]) / 365,\n        r = r,\n        b = 0,\n        tol = 0.1,\n        maxiter = 1000 \n        )\n}\ntidy_data$fOption_implied <- implied\n\n#saveRDS(tidy_data, \"tidy_data_fOptions.R\")",
+    "created" : 1460504773487.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1320844761",
+    "id" : "70E8E181",
+    "lastKnownWriteTime" : 1460719623,
+    "last_content_update" : 1460719623224,
+    "path" : "~/Southampton/Term2/ComputationalFinance/CW2/Code/fOptions.R",
+    "project_path" : "fOptions.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

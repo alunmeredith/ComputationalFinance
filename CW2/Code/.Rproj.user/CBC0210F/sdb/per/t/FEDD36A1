@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#################################################\n## Black Scholes Function #######################\n#################################################\nPutcall <- function(putcall,S,K,r,sigma,t_cur, t_mat = 319) {\n    t <- (t_mat - t_cur) / 365\n    \n    # functions to compute the subvariables d1 and d2 in closed form BS solution\n    D1 <- function(S,K,r,sigma,t) {\n        denom <- sigma * sqrt(t)\n        a <- log(S/K)\n        b <- (r + sigma^2 / 2) * t\n        return((a + b) / denom)\n    }\n    D2 <- function(S,K,r,sigma,t) {\n        d1 <- D1(S,K,r,sigma,t)\n        return( d1 - sigma * sqrt(t))\n    }\n    d1 <- D1(S,K,r,sigma,t)\n    d2 <- D2(S,K,r,sigma,t)\n    \n    # Ifelse statement for put vs call statement\n    if (putcall == \"p\") {\n        price <- pnorm(-d2) * K * exp(-r * t) - pnorm(-d1) * S\n    }\n    else if (putcall == \"c\") {\n        price <- S * pnorm(d1) - K * exp(-r * (t)) * pnorm(d2)\n    }\n    else price <- NA\n    return(price)\n}\n\n#################################################\n# Implied volatility function ###################\n#################################################\n\nImplied <- function(putcall,Val_obs,S,K,r,t_cur, interval = c(0, 1000), t_mat = 319) { \n    level = 1\n    error = 999\n    while (abs(error) > 0.0001) {\n        x <- mean(interval)\n        \n        error = Putcall(putcall, S, K, r,t_cur, sigma = x, t_mat) - Val_obs\n        \n        ifelse(error > 0, \n               interval[2] <- x, \n               interval[1] <- x)\n         \n        level <- level + 1\n        if (level >= 1000) return(NA)\n    }\n    return(x)\n}\n    \n\n#############################################################################\nLatticeEurCall <- function(S0, K, r, T, sigma, N) {\n    \n    deltaT <- T/N\n    \n    # Evaluate expressions for u, d, p\n    u = exp(sigma * sqrt(deltaT))\n    d = 1/u\n    p = (exp(r * deltaT) - d) / (u - d)\n    \n    \n    # Generate option values at time T (last column of lattice)\n    lattice = matrix(NA, N+1, N+1)\n    for (i in 0:N){\n        lattice[i+1, N+1] = max(0, S0 * (u^i) * (d^(N-i)) - K)\n    }\n    \n    # Step backwards dt and generate option values of lattice at that point as weighted average of child nodes. \n    for (j in (N-1):0) {\n        for (i in 0:j) {\n            lattice[i + 1, j + 1] = exp(-r * deltaT) *\n                (p * lattice[i+2, j+2] + (1-p) * lattice[i+1, j+2])\n        }\n    }\n    \n    return(list(price = lattice[1,1], lattice = lattice))\n}\n    \n    \n    \n# Implied <- function(putcall,Val_obs,S,K,r,interval,t_mat,t_cur, level = 1) { ####\n# \n#     #print(paste(\"interval: \", interval[1], interval[2]))\n#     high <- Putcall(putcall,S,K,r,interval[1],t_mat,t_cur) - Val_obs\n#     low <- Putcall(putcall,S,K,r,interval[2],t_mat,t_cur) - Val_obs\n#     #print(paste(\"interval Values: \", high, low))\n#     \n#     if (high < 0 | low > 0) {\n#         warning(\"interval does not bisect 0\")\n#         return(NA)\n#     }\n#     if (abs(high) < 0.0001 | abs(low) < 0.0001) return(mean(interval))\n# \n#     midpoint <- mean(interval)\n#     mid <- Putcall(putcall,S,K,r,midpoint,t_mat,t_cur) - Val_obs\n#     #print(paste(\"midpoint: \", midpoint, \" Value: \", mid))\n#     \n#     if (level > 1000) {\n#         warning(\"recursion limit reached at error value: \", mid)\n#         return(NA)\n#     }\n#     \n#     ifelse(mid > 0, \n#            interval[1] <- midpoint,\n#            interval[2] <- midpoint)\n#     midpoint <- Implied(putcall,Val_obs, S,K,r,interval,t_mat,t_cur, level + 1)\n#     return(midpoint)\n# }\n\n############",
+    "created" : 1460486008095.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "84|79|113|12|\n",
+    "hash" : "2064422970",
+    "id" : "FEDD36A1",
+    "lastKnownWriteTime" : 1460548496,
+    "last_content_update" : 1460548497230,
+    "path" : "~/Southampton/Term2/ComputationalFinance/CW2/Code/helper_functions.R",
+    "project_path" : "helper_functions.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 6,
+    "source_on_save" : true,
+    "source_window" : "",
+    "type" : "r_source"
+}

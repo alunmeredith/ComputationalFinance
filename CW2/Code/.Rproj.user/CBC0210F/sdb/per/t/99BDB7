@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# Read data into a tidy format ############################################################\nlibrary(stringr)\n\n# Read file names\nfile_names <- list.files(\"../Data\", full.names = T)\nnames <- str_extract(file_names, \"[cp][0-9]{4}\")\n\n# Build a list of data frames for each option\ndaily_prices <- list()\nfor (ii in seq_along(file_names)) {\n    tmp <- read.table(file_names[ii],\n                      col.names = c(\"date\", \"option_price\", \"asset_value\"))\n    # Changed date to number of days from start indexed at 0\n    tmp$date <- tmp$date - min(tmp$date)\n    tmp$id <- names[ii]\n    daily_prices[[names[ii]]] <- tmp\n}\n\n# Merge together\ntidy_data <- Reduce(function(...) rbind(...), daily_prices)\ntidy_data$id <- as.factor(tidy_data$id)\n\n# Parse the file names to assign put/call and strike price attributes\ntidy_data <- mutate(tidy_data, putcall = str_extract(id, \"[cp]\"),\n                    strike_price = as.numeric(str_extract(id, \"[0-9]{4}\"))\n)\n\n###########################################################################################\n# Create wide dataset and vectors for the date/asset (because shared with all options) ####\n\nlibrary(tidyr)\ndata_wide <- tidy_data %>%\n    select(-c(putcall, strike_price)) %>%\n    spread(id, option_price)\n\nasset <- data.frame(date = data_wide$date,\n                   value = data_wide$asset_value)\n\nt_mat <- length(asset$date) + 1\n##########################################################################\n# Find the log returns, volatilities (with standard error) ###############\n\n# Find subset of date in training set\n# index of evaluation set (t > t_mat/4) i.e. latter 3/4 of data\nt_quarter <- ceiling(t_mat/4)\n\n# Specify the minimum date in time window \nasset$lag_date <- asset$date - t_quarter\nind <- asset$lag_date < 0\nasset$lag_date[ind] <- NA\n\n# Log returns\nasset$log_returns <-  c(NA, diff(log(asset$value)))\n\n# Volatilities and standard error along window \nvolatilities_raw <- apply(asset, 1, function(x) {\n    \n    # Account for gaps of up to 4 days\n    if (!(x[[\"lag_date\"]] %in% asset$date)) {\n        for (i in 1:4) {\n            if ((x[[\"lag_date\"]] + i) %in% asset$date) {\n                x[[\"lag_date\"]] <- x[[\"lag_date\"]] + i\n                break\n            }\n            if (i == 4) return(list(volatility = NA, volatility_se = NA))\n        }\n    }\n\n    # Compute time window\n    min <- which(asset$date == x[[\"lag_date\"]])\n    max <- which(asset$date == x[[\"date\"]])\n    window <- asset$log_returns[min:max]\n    \n    #\n    s <- sd(window, na.rm = T)\n    tau <- ((asset$date[max] - asset$date[min]) / length(window)) / 365\n    vol <- s / sqrt(tau) # volatility\n    vol_se <- vol / sqrt(2 * length(window)) # standard error\n    return(list(volatility = vol, volatility_se = vol_se))\n})\n\n# Combine volatility output into asset dataframe (and wide option values)\nvolatilities <- volatilities_raw %>%\n    unlist() %>%\n    matrix(nrow = 2) %>%\n    t() %>%\n    as.data.frame()\nnames(volatilities) <- c(\"volatility\", \"volatility_se\")\nasset <- bind_cols(asset, volatilities)\nasset <- left_join(asset, data_wide)\ntidy_data <- full_join(select(asset, date, volatility, volatility_se), tidy_data)\n\ntrain_ii <- !is.na(asset$volatility)\nsave(asset, tidy_data, train_ii, file = \"tidy_data.RData\")\n\n",
+    "created" : 1460550670581.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "194913894",
+    "id" : "99BDB7",
+    "lastKnownWriteTime" : 1460503934,
+    "last_content_update" : 1460503934,
+    "path" : "~/Southampton/Term2/ComputationalFinance/CW2/Code/Preprocessing.R",
+    "project_path" : "Preprocessing.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
