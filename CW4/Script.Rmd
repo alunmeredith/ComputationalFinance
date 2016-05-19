@@ -1,0 +1,238 @@
+```{r Libraries}
+library(readr)
+library(ggplot2)
+library(ggthemes)
+source('function_library.R')
+source('kalman_2.R')
+```
+
+# TEST DATA
+
+Simulate an autoregressive function + noise n times. Then run kalman filtering algorithm on it.
+Results2 runs kalman filtering on a single simulation but varies the noise parameter W. 
+```{r Simulation Data} 
+#Guess parameters
+ORDER <- 5
+W = diag(ORDER) * 1e-7
+# Initial state estimate
+theta = rep(1/ORDER, ORDER)
+P = diag(ORDER) * .1
+
+# Run kalman filtering many times and cbind
+ntimes <- 10
+ntimes2 <- 5
+results <- data.frame()
+RMSE <- matrix(NA, nrow = ntimes, ncol = ntimes2 * 2)
+for (i in 1:ntimes) {
+    # Generate test data
+    targets <- simulation(300, c(.3,.7), 1, .1)
+    for (j in 1:ntimes2) {
+        # Set tuning parameters
+        V <- autoregression(targets, ORDER)$variance
+        W = diag(ORDER) * 1 * 10 ^ ((j - 1 - round((ntimes2-1)/2)) * 2)
+        
+        kal <- kalman(targets, ORDER, V, W, theta, P)
+        kal$simulation.id <- i
+        kal$W <- W[1,1]
+        kal$index <- 1:nrow(kal)
+        results <- rbind(results, kal)
+        
+        #RMSE
+        RMSE[i,j] <- sqrt(sum(autoregression(targets, ORDER)$residuals^2) / length(targets))
+        RMSE[i,j + ntimes2] <- sqrt(sum( (kal$targets - kal$Estimate)^2, na.rm = T ) / length(targets))
+    }
+}
+results <- na.omit(results)
+results$simulation.id <- as.factor(results$simulation.id)
+results$W <- as.factor(results$W)
+```
+
+## Make plots of simulation data 
+
+```{r Weight approximation plot}
+colors <- RColorBrewer::brewer.pal(4, name = "Set1")
+
+dat1 <- results[results$W == 1,]
+# Plot kalman filter approximation of weights
+gg <- ggplot(data = dat1, aes(x = index, group = simulation.id)) +
+    geom_line(aes(y = Theta1, size = simulation.id, alpha = simulation.id), col = colors[1]) +
+    geom_line(aes(y = Theta2, size = simulation.id, alpha = simulation.id), col = colors[2]) +
+    theme_few() +
+    geom_hline(yintercept = .3, col = colors[2], linetype = 2, size = 1.5) +
+    geom_hline(yintercept = .7, col = colors[1], linetype = 2, size = 1.5) +
+    scale_y_continuous(breaks = seq(.1, 1, .1), limits = c(0,1)) +
+    scale_size_manual(values = c(1.5, rep(1, ntimes - 1))) +
+    scale_alpha_manual(values = c(1, rep(.2, ntimes - 1))) +
+    ylab("Theta") +
+    xlab("Day")
+
+png("Test_Weight_Estimation.png")
+gg
+dev.off()
+gg
+```
+
+```{r Kalman smoothing plot}
+# Plot kalman filter smoothing of data
+dat2 <- results[(results$index %in% 1:50) & results$simulation.id == "1",]
+gg2 <- ggplot(data = dat2, aes(x = index)) + 
+    geom_line(aes(y = Estimate)) + 
+    geom_point(aes(y = targets), col = "blue") + 
+    ylab("y") +
+    xlab("Day") +
+    theme_few()
+
+png("Test_Estimation.png")
+gg2
+dev.off()
+gg2
+```
+
+### W variaiton plot
+The shape of W also has an impact (but use diagonal matrix here)
+Lower orders of magnitude are "smoother", on a static function like this one more smoothing improves filtering but takes longer to "lock on" to the function. For the real data where the underlying function is not static this can lead to "chasing the dragon" where the underlying function changes faster than it is locked onto. 
+```{r W variation plot}
+# variation in W order of magnitude
+dat3 <- results[(results$index %in% 1:30) & results$simulation.id == "1",]
+gg3 <- ggplot(data = dat3, aes(x = index, colour = W)) + 
+    geom_point(aes(y = targets), col = "blue") + 
+    geom_line(aes(y = Estimate)) +
+    ylab("y") +
+    xlab("Day") +
+    theme_few() +
+    scale_color_brewer(palette = "Set1")
+
+png("W_variation.png")
+gg3
+dev.off()
+gg3
+```
+
+# REAL DATA
+
+```{r Read data} 
+dat_raw <- read_csv("S&P500.csv")
+targets <- (dat_raw$Close)
+```
+
+```{r Run kalman filtering / AR}
+results_real <- data.frame()
+RMSE_real <- matrix(NA, nrow = ntimes2, ncol = ntimes2 + 1)
+for (i in 1:ntimes2) {
+    # Guess parameters
+    ORDER <- i
+    AR_model <- autoregression(targets, ORDER)
+    V <- AR_model$variance
+    
+    for (j in 1:ntimes2) {
+        W = diag(ORDER) * 1 * 10 ^ ((j - 1 - round((ntimes2-1)/2)) * 2)
+        
+        # Initial state estimate
+        theta = rep(1/ORDER, ORDER)
+        P = diag(ORDER) * 1e-3
+        
+        # Kalman
+        kal <- kalman(targets, ORDER, V, W, theta, P)
+        kal$index <- 1:nrow(kal)
+        kal$order <- ORDER
+        kal$W <- W[1,1]
+        
+        # only save full resutls for order == 2
+        if (ORDER == 2) {
+            results_real <- rbind(results_real, kal)
+        }
+        
+        RMSE_real[i,j] <-  sqrt( sum((kal$targets - kal$Estimate)^2, na.rm = T) / length(targets) )
+    }
+    RMSE_real[i, ntimes2 + 1] <- sqrt(sum(AR_model$residuals^2) / length(targets))
+    
+}
+```
+
+
+## Plots
+
+```{r Kalman Smoothing on real data}
+gg4 <- ggplot(data = kal, aes(x = index)) + 
+    geom_line(aes(y = Estimate)) + 
+    geom_point(aes(y = targets), col = "blue") + 
+    ylab("y") +
+    xlab("Day") +
+    theme_few()
+png("Test_smooth_3.png")
+gg4
+dev.off()
+gg4
+```
+
+```{r Residual distribution AR vs kal}
+# Plot residual distribution
+gg5 <- qplot(kal$targets - kal$Estimate, alpha = .5) + 
+    geom_histogram(aes(x = AR_model$residuals), fill = "blue", alpha = .5) +
+    theme_few() +
+    xlab("Residuals")
+
+png("Residual_distribution.png")
+gg5
+dev.off()
+gg5
+
+print( paste("AR RMSE: ", sqrt( sum(AR_model$residuals^2)) / length(AR_model$residuals)))
+print( paste("Kalman RMSE: ", sqrt( sum((kal$targets - kal$Estimate)^2, na.rm = T)) / length(kal$targets) ))
+```
+
+### SUMMARY OF ERRORS FOR AUTOREGRESSION AND KALMAN ON TEST / REAL DATA #################
+#########################################################################################
+
+### Plot rmse vs. order for a variety of orders, 2 plots one for real one for test. 
+The order of the data is 2, when the order is lower than this the RMSE is significantly higher than other points. 
+However after this point RMSE isn't significantly impacted by order because the model is able to capture the order. 
+RMSE decreases generally for the more smoothing present. This is because it is static data. Smoothing can be created by lower W or higher order terms. 
+```{r, eval=F}
+### TO RUN THIS SNIPET FIRST GENERATE RMSE1:5 BY CHANGING ORDER FROM 1:5 AND RUNNING THE SIMULATION CODE
+
+RMSEs <- list(Order1 = RMSE1[,5:10], Order2 = RMSE2[,5:10], Order3 = RMSE3[,5:10], Order4 = RMSE4[,5:10], Order5 = RMSE5[,5:10])
+RMSEm <- sapply(RMSEs, function(x) apply(x, 2, mean))
+RMSEsd <- sapply(RMSEs, function(x) apply(x, 2, sd))
+#RMSEse <- RMSEsd / sqrt(10)
+
+t1 <- tidyr::gather(as.data.frame(RMSEm), order, RMSE)
+t2 <- tidyr::gather(as.data.frame(RMSEsd), order, stand_dev)
+RMSE_df <- cbind(t1, t2)
+RMSE_df$model <- c("AR", rep("Kalman", 5))
+RMSE_df$W <- rep(c("NA", "1e-4", "1e-2", "1", "1e2", "1e4"),5)
+RMSE_df$model <- as.factor(RMSE_df$model)
+RMSE_df$W <- as.factor(RMSE_df$W)
+RMSE_df <- RMSE_df[,-3]
+
+gg5 <- ggplot(RMSE_df, aes(x = order, color = W)) +
+    geom_errorbar(aes(ymin = RMSE - 2 * stand_dev / sqrt(nrow(RMSE_df)), 
+                      ymax = RMSE + 2 * stand_dev / sqrt(nrow(RMSE_df))), width = .2) +
+    geom_point(aes(y = RMSE)) +
+    theme_few()
+
+png("RMSE_order.png")
+gg5
+dev.off()
+gg5
+```
+
+# We see a very similar pattern for the real data. 
+```{r Real data}
+# Repeat the above plot for real data
+rownames(RMSE_real) <- c("Order1", "Order2", "Order3", "Order4", "Order5")
+RMSE_real_df <- tidyr::gather(as.data.frame(t(RMSE_real)), order, RMSE)
+RMSE_real_df$W <- rep(c("1e-4", "1e-2", "1", "1e2", "1e4", "NA"),5)
+
+gg6 <- ggplot(RMSE_real_df, aes(x = order, color = W)) +
+    geom_point(aes(y = RMSE)) + theme_few()
+
+png("RMSE_order_real.png")
+gg6
+dev.off()
+gg6
+```
+
+##########################################################################
+# Lasso #################################################################
+      
