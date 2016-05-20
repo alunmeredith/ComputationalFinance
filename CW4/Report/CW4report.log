@@ -1,0 +1,317 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2016.5.20)  20 MAY 2016 14:32
+entering extended mode
+**./CW4report.tex
+(CW4report.tex
+LaTeX2e <2015/10/01> patch level 2
+Babel <3.9n> and hyphenation patterns for 69 languages loaded.
+(sig-alternate-05-2015.cls (D:\ProgramFiles\Latex\tex\latex\graphics\epsfig.sty
+Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
+(D:\ProgramFiles\Latex\tex\latex\graphics\graphicx.sty
+Package: graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
+
+(D:\ProgramFiles\Latex\tex\latex\graphics\keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+(D:\ProgramFiles\Latex\tex\latex\graphics\graphics.sty
+Package: graphics 2014/10/28 v1.0p Standard LaTeX Graphics (DPC,SPQR)
+
+(D:\ProgramFiles\Latex\tex\latex\graphics\trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(D:\ProgramFiles\Latex\tex\latex\00miktex\graphics.cfg
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 94.
+
+(D:\ProgramFiles\Latex\tex\latex\pdftex-def\pdftex.def
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+(D:\ProgramFiles\Latex\tex\generic\oberdiek\infwarerr.sty
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+(D:\ProgramFiles\Latex\tex\generic\oberdiek\ltxcmds.sty
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count79
+))
+\Gin@req@height=\dimen102
+\Gin@req@width=\dimen103
+)
+\epsfxsize=\dimen104
+\epsfysize=\dimen105
+)
+(D:\ProgramFiles\Latex\tex\latex\amsfonts\amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+(D:\ProgramFiles\Latex\tex\latex\amsfonts\amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\@emptytoks=\toks15
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
+(D:\ProgramFiles\Latex\tex\latex\amsmath\amsmath.sty
+Package: amsmath 2013/01/14 v2.14 AMS math features
+\@mathmargin=\skip41
+
+For additional information on amsmath, use the `?' option.
+(D:\ProgramFiles\Latex\tex\latex\amsmath\amstext.sty
+Package: amstext 2000/06/29 v2.01
+
+(D:\ProgramFiles\Latex\tex\latex\amsmath\amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks16
+\ex@=\dimen106
+))
+(D:\ProgramFiles\Latex\tex\latex\amsmath\amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen107
+)
+(D:\ProgramFiles\Latex\tex\latex\amsmath\amsopn.sty
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count80
+LaTeX Info: Redefining \frac on input line 210.
+\uproot@=\count81
+\leftroot@=\count82
+LaTeX Info: Redefining \overline on input line 306.
+\classnum@=\count83
+\DOTSCASE@=\count84
+LaTeX Info: Redefining \ldots on input line 378.
+LaTeX Info: Redefining \dots on input line 381.
+LaTeX Info: Redefining \cdots on input line 466.
+\Mathstrutbox@=\box26
+\strutbox@=\box27
+\big@size=\dimen108
+LaTeX Font Info:    Redeclaring font encoding OML on input line 566.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 567.
+\macc@depth=\count85
+\c@MaxMatrixCols=\count86
+\dotsspace@=\muskip10
+\c@parentequation=\count87
+\dspbrk@lvl=\count88
+\tag@help=\toks17
+\row@=\count89
+\column@=\count90
+\maxfields@=\count91
+\andhelp@=\toks18
+\eqnshift@=\dimen109
+\alignsep@=\dimen110
+\tagshift@=\dimen111
+\tagwidth@=\dimen112
+\totwidth@=\dimen113
+\lineht@=\dimen114
+\@envbody=\toks19
+\multlinegap=\skip42
+\multlinetaggap=\skip43
+\mathdisplay@stack=\toks20
+LaTeX Info: Redefining \[ on input line 2665.
+LaTeX Info: Redefining \] on input line 2666.
+)
+Document Class 'sig-alternate' <9th June '13>. Modified by G.K.M. Tobin/Gerry M
+urray/Boris Veytsman
+Based in part upon document Style `acmconf' <22 May 89>. Hacked 4/91 by
+shivers@cs.cmu.edu, 4/93 by theobald@cs.mcgill.ca
+Excerpts were taken from (Journal Style) 'esub2acm.cls'.
+****** Bugs/comments/suggestions/technicalities to Gerry Murray -- murray@hq.ac
+m.org ******
+Questions on the style, SIGS policies, etc. to Adrienne Griscti griscti@acm.org
+
+\ACM@basesize=\count92
+(D:\ProgramFiles\Latex\tex\latex\comment\comment.sty
+\CommentStream=\write3
+
+Excluding comment 'comment') Excluding comment 'CCSXML'
+\footheight=\dimen115
+\@maxsep=\dimen116
+\@dblmaxsep=\dimen117
+
+(D:\ProgramFiles\Latex\tex\generic\oberdiek\ifpdf.sty
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+)
+\aucount=\count93
+\originalaucount=\count94
+\auwidth=\dimen118
+\auskip=\dimen119
+\auskipcount=\count95
+\auskip=\dimen120
+\allauboxes=\dimen121
+\addauthors=\toks21
+\addauflag=\count96
+\subtitletext=\toks22
+\savesection=\count97
+\sectioncntr=\count98
+\c@figure=\count99
+\c@table=\count100
+\titleboxnotes=\toks23
+\titleboxnoteflag=\count101
+
+
+LaTeX Warning: You have requested document class `sig-alternate-05-2015',
+               but the document class provides `sig-alternate'.
+
+Document Class: sig-alternate 2013/05/12 v2.7 based on acmproc.cls V1.3 <Nov. 3
+0 '99>
+(D:\ProgramFiles\Latex\tex\latex\base\latexsym.sty
+Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
+\symlasy=\mathgroup6
+LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
+(Font)                  U/lasy/m/n --> U/lasy/b/n on input line 52.
+)
+\@acmtitlebox=\box28
+\titlenotecount=\count102
+\tntoks=\toks24
+\tntokstwo=\toks25
+\tntoksthree=\toks26
+\tntoksfour=\toks27
+\tntoksfive=\toks28
+\catcount=\count103
+\copyrightnotice=\toks29
+\conf=\toks30
+\confinfo=\toks31
+\c@part=\count104
+\c@section=\count105
+\c@subsection=\count106
+\c@subsubsection=\count107
+\c@paragraph=\count108
+
+Using 'Abbrev' bibliography style
+LaTeX Info: Redefining \cite on input line 1408.
+\bibindent=\dimen122
+\colcntr=\count109
+\saveb@x=\box29
+\copyrtyr=\toks32
+\acmcopyr=\toks33
+\boilerplate=\toks34
+(D:\ProgramFiles\Latex\tex\latex\url\url.sty
+\Urlmuskip=\muskip11
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+(D:\ProgramFiles\Latex\tex\latex\base\fontenc.sty
+Package: fontenc 2005/09/27 v1.99g Standard LaTeX package
+
+(D:\ProgramFiles\Latex\tex\latex\base\t1enc.def
+File: t1enc.def 2005/09/27 v1.99g Standard LaTeX file
+LaTeX Font Info:    Redeclaring font encoding T1 on input line 48.
+)
+LaTeX Font Info:    Try loading font information for T1+aer on input line 105.
+
+(D:\ProgramFiles\Latex\tex\latex\ae\t1aer.fd
+File: t1aer.fd 1997/11/16 Font definitions for T1/aer.
+)))
+(D:\ProgramFiles\Latex\tex\latex\base\fontenc.sty
+Package: fontenc 2005/09/27 v1.99g Standard LaTeX package
+
+(D:\ProgramFiles\Latex\tex\latex\base\t1enc.def
+File: t1enc.def 2005/09/27 v1.99g Standard LaTeX file
+LaTeX Font Info:    Redeclaring font encoding T1 on input line 48.
+)) (CW4report.aux)
+\openout1 = `CW4report.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 6.
+LaTeX Font Info:    ... okay on input line 6.
+
+(D:\ProgramFiles\Latex\tex\context\base\supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count110
+\scratchdimen=\dimen123
+\scratchbox=\box30
+\nofMPsegments=\count111
+\nofMParguments=\count112
+\everyMPshowfont=\toks35
+\MPscratchCnt=\count113
+\MPscratchDim=\dimen124
+\MPnumerator=\count114
+\makeMPintoPDFobject=\count115
+\everyMPtoPDFconversion=\toks36
+)
+LaTeX Font Info:    Try loading font information for U+msa on input line 12.
+ (D:\ProgramFiles\Latex\tex\latex\amsfonts\umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 12.
+
+(D:\ProgramFiles\Latex\tex\latex\amsfonts\umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+LaTeX Font Info:    Try loading font information for U+lasy on input line 12.
+
+(D:\ProgramFiles\Latex\tex\latex\base\ulasy.fd
+File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
+)
+<Test_Weight_Estimation.png, id=1, 481.8pt x 481.8pt>
+File: Test_Weight_Estimation.png Graphic file (type png)
+
+<use Test_Weight_Estimation.png>
+Package pdftex.def Info: Test_Weight_Estimation.png used on input line 89.
+(pdftex.def)             Requested size: 240.0pt x 239.99515pt.
+
+Underfull \hbox (badness 1616) in paragraph at lines 91--91
+[]\T1/aer/bx/n/9 Figure 1: The pre-dic-tion of un-der-ly-ing auto-
+ []
+
+<W_variation.png, id=2, 481.8pt x 481.8pt>
+File: W_variation.png Graphic file (type png)
+ <use W_variation.png>
+Package pdftex.def Info: W_variation.png used on input line 96.
+(pdftex.def)             Requested size: 240.0pt x 239.99515pt.
+ [1{C:/Users/inbre/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}
+
+
+]
+<RMSE_order_real.png, id=19, 481.8pt x 481.8pt>
+File: RMSE_order_real.png Graphic file (type png)
+ <use RMSE_order_real.png>
+Package pdftex.def Info: RMSE_order_real.png used on input line 105.
+(pdftex.def)             Requested size: 240.0pt x 239.99515pt.
+
+<DifferentModels.png, id=20, 481.8pt x 481.8pt>
+File: DifferentModels.png Graphic file (type png)
+ <use DifferentModels.png>
+Package pdftex.def Info: DifferentModels.png used on input line 114.
+(pdftex.def)             Requested size: 240.0pt x 239.99515pt.
+
+[2 <./Test_Weight_Estimation.png> <./W_variation.png> <./RMSE_order_real.png>]
+[3
+
+ <./DifferentModels.png>]
+No file CW4report.bbl.
+(CW4report.aux) ) 
+Here is how much of TeX's memory you used:
+ 2575 strings out of 493634
+ 30379 string characters out of 3146200
+ 97749 words of memory out of 3000000
+ 5912 multiletter control sequences out of 15000+200000
+ 44181 words of font info for 63 fonts, out of 3000000 for 9000
+ 1025 hyphenation exceptions out of 8191
+ 41i,15n,28p,1122b,226s stack positions out of 5000i,500n,10000p,200000b,50000s
+{D:/ProgramFiles/Latex/fonts/enc/dvips/fontname/8r.enc}<D:/Pro
+gramFiles/Latex/fonts/type1/public/amsfonts/cm/cmbx9.pfb><D:/ProgramFiles/Latex
+/fonts/type1/public/amsfonts/cmextra/cmex9.pfb><D:/ProgramFiles/Latex/fonts/typ
+e1/public/amsfonts/cm/cmmi6.pfb><D:/ProgramFiles/Latex/fonts/type1/public/amsfo
+nts/cm/cmmi9.pfb><D:/ProgramFiles/Latex/fonts/type1/public/amsfonts/cm/cmr6.pfb
+><D:/ProgramFiles/Latex/fonts/type1/public/amsfonts/cm/cmr9.pfb><D:/ProgramFile
+s/Latex/fonts/type1/public/amsfonts/cm/cmsy6.pfb><D:/ProgramFiles/Latex/fonts/t
+ype1/public/amsfonts/cm/cmsy9.pfb><D:/ProgramFiles/Latex/fonts/type1/public/ams
+fonts/cm/cmtt9.pfb><D:/ProgramFiles/Latex/fonts/type1/urw/helvetic/uhvb8a.pfb><
+D:/ProgramFiles/Latex/fonts/type1/urw/helvetic/uhvr8a.pfb><D:/ProgramFiles/Late
+x/fonts/type1/urw/times/utmb8a.pfb>
+Output written on CW4report.pdf (3 pages, 162998 bytes).
+PDF statistics:
+ 69 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+

@@ -1,3 +1,9 @@
+---
+output: 
+  html_document: 
+    theme: journal
+    toc: yes
+---
 ```{r Libraries}
 library(readr)
 library(ggplot2)
@@ -6,17 +12,18 @@ source('function_library.R')
 source('kalman_2.R')
 ```
 
-# TEST DATA
+# Apply models to simulated data 
 
 Simulate an autoregressive function + noise n times. Then run kalman filtering algorithm on it.
 Results2 runs kalman filtering on a single simulation but varies the noise parameter W. 
-```{r Simulation Data} 
+$$ Y = 0.7Y_{t-1} + 0.3Y_{t-2} + \eta $$
+```{r Simulation Data, message=FALSE, warning=FALSE}
 #Guess parameters
-ORDER <- 5
+ORDER <- 2
 W = diag(ORDER) * 1e-7
 # Initial state estimate
 theta = rep(1/ORDER, ORDER)
-P = diag(ORDER) * .1
+P = diag(ORDER) * 100
 
 # Run kalman filtering many times and cbind
 ntimes <- 10
@@ -49,10 +56,10 @@ results$W <- as.factor(results$W)
 
 ## Make plots of simulation data 
 
-```{r Weight approximation plot}
+```{r Weight approximation plot, message=FALSE, warning=FALSE}
 colors <- RColorBrewer::brewer.pal(4, name = "Set1")
 
-dat1 <- results[results$W == 1,]
+dat1 <- results[results$W == 0.0001,]
 # Plot kalman filter approximation of weights
 gg <- ggplot(data = dat1, aes(x = index, group = simulation.id)) +
     geom_line(aes(y = Theta1, size = simulation.id, alpha = simulation.id), col = colors[1]) +
@@ -68,13 +75,13 @@ gg <- ggplot(data = dat1, aes(x = index, group = simulation.id)) +
 
 png("Test_Weight_Estimation.png")
 gg
-dev.off()
+invisible(dev.off())
 gg
 ```
 
 ```{r Kalman smoothing plot}
 # Plot kalman filter smoothing of data
-dat2 <- results[(results$index %in% 1:50) & results$simulation.id == "1",]
+dat2 <- results[(results$index %in% 1:50) & results$simulation.id == "1" & results$W == 0.0001,]
 gg2 <- ggplot(data = dat2, aes(x = index)) + 
     geom_line(aes(y = Estimate)) + 
     geom_point(aes(y = targets), col = "blue") + 
@@ -84,7 +91,7 @@ gg2 <- ggplot(data = dat2, aes(x = index)) +
 
 png("Test_Estimation.png")
 gg2
-dev.off()
+invisible(dev.off())
 gg2
 ```
 
@@ -104,7 +111,7 @@ gg3 <- ggplot(data = dat3, aes(x = index, colour = W)) +
 
 png("W_variation.png")
 gg3
-dev.off()
+invisible(dev.off())
 gg3
 ```
 
@@ -117,15 +124,17 @@ targets <- (dat_raw$Close)
 
 ```{r Run kalman filtering / AR}
 results_real <- data.frame()
-RMSE_real <- matrix(NA, nrow = ntimes2, ncol = ntimes2 + 1)
+ntimes2 = 20
+w.vals <- (1 * 10) ^ (ceiling(-ntimes2/2):floor(ntimes2/2))
+RMSE_real <- matrix(NA, nrow = ntimes2, ncol = length(w.vals) + 1)
 for (i in 1:ntimes2) {
     # Guess parameters
     ORDER <- i
     AR_model <- autoregression(targets, ORDER)
     V <- AR_model$variance
     
-    for (j in 1:ntimes2) {
-        W = diag(ORDER) * 1 * 10 ^ ((j - 1 - round((ntimes2-1)/2)) * 2)
+    for (j in 1:length(w.vals)) {
+        W = diag(ORDER) * w.vals[j]
         
         # Initial state estimate
         theta = rep(1/ORDER, ORDER)
@@ -136,34 +145,24 @@ for (i in 1:ntimes2) {
         kal$index <- 1:nrow(kal)
         kal$order <- ORDER
         kal$W <- W[1,1]
+        kal <- kal[,-c(grep("^P[0-9]*$", names(kal)))]
+        kal <- kal[,-c(grep("^Theta[0-9]*$", names(kal)))]
+
         
-        # only save full resutls for order == 2
-        if (ORDER == 2) {
-            results_real <- rbind(results_real, kal)
-        }
+        results_real <- rbind(results_real, kal)
         
         RMSE_real[i,j] <-  sqrt( sum((kal$targets - kal$Estimate)^2, na.rm = T) / length(targets) )
     }
-    RMSE_real[i, ntimes2 + 1] <- sqrt(sum(AR_model$residuals^2) / length(targets))
+    RMSE_real[i, length(w.vals) + 1] <- sqrt(sum(AR_model$residuals^2) / length(targets))
     
 }
+colnames(RMSE_real) <- c(paste0("w", w.vals), "AR")
+rownames(RMSE_real) <- c(paste0("Order", 1:ntimes2))
 ```
 
 
 ## Plots
 
-```{r Kalman Smoothing on real data}
-gg4 <- ggplot(data = kal, aes(x = index)) + 
-    geom_line(aes(y = Estimate)) + 
-    geom_point(aes(y = targets), col = "blue") + 
-    ylab("y") +
-    xlab("Day") +
-    theme_few()
-png("Test_smooth_3.png")
-gg4
-dev.off()
-gg4
-```
 
 ```{r Residual distribution AR vs kal}
 # Plot residual distribution
@@ -174,7 +173,7 @@ gg5 <- qplot(kal$targets - kal$Estimate, alpha = .5) +
 
 png("Residual_distribution.png")
 gg5
-dev.off()
+invisible(dev.off())
 gg5
 
 print( paste("AR RMSE: ", sqrt( sum(AR_model$residuals^2)) / length(AR_model$residuals)))
@@ -205,34 +204,72 @@ RMSE_df$model <- as.factor(RMSE_df$model)
 RMSE_df$W <- as.factor(RMSE_df$W)
 RMSE_df <- RMSE_df[,-3]
 
-gg5 <- ggplot(RMSE_df, aes(x = order, color = W)) +
+gg6 <- ggplot(RMSE_df, aes(x = order, color = W)) +
     geom_errorbar(aes(ymin = RMSE - 2 * stand_dev / sqrt(nrow(RMSE_df)), 
                       ymax = RMSE + 2 * stand_dev / sqrt(nrow(RMSE_df))), width = .2) +
     geom_point(aes(y = RMSE)) +
     theme_few()
 
 png("RMSE_order.png")
-gg5
-dev.off()
-gg5
+gg6
+invisible(dev.off())
+gg6
 ```
 
-# We see a very similar pattern for the real data. 
-```{r Real data}
-# Repeat the above plot for real data
-rownames(RMSE_real) <- c("Order1", "Order2", "Order3", "Order4", "Order5")
-RMSE_real_df <- tidyr::gather(as.data.frame(t(RMSE_real)), order, RMSE)
-RMSE_real_df$W <- rep(c("1e-4", "1e-2", "1", "1e2", "1e4", "NA"),5)
+# We see a very similar pattern for the real data.
+* All values above 0.01 converge to the same place (assume this means able to respond fully to the change from observation)
+* Values below 10 ^ - 6 converge to the same place
+* Never reachest the level of AR
+* Order 1 with low W value has best performance (but gets close)
+* High W is better than low W for orders >= 3 (basically high order and low W are too different ways to achieve smoothing)
+It appears that a best fit for the data is high values of W and an order of 
 
-gg6 <- ggplot(RMSE_real_df, aes(x = order, color = W)) +
-    geom_point(aes(y = RMSE)) + theme_few()
+```{r Real data, message=FALSE, warning=FALSE}
+# Repeat the above plot for real data
+RMSE_real_df <- tidyr::gather(as.data.frame(t(RMSE_real)), order, RMSE)
+RMSE_real_df$W <- rep( c(w.vals, "AR"), nrow(RMSE_real))
+RMSE_real_df$order <- as.numeric(gsub("Order", "", RMSE_real_df$order))
+RMSE_real_df <- RMSE_real_df[RMSE_real_df$order %in% 1:10, ]
+
+gg7 <- ggplot(RMSE_real_df, aes(x = jitter(order), color = W)) +
+    geom_point(aes(y = RMSE)) + 
+    theme_few() +
+    scale_x_continuous(breaks = 1:10)
 
 png("RMSE_order_real.png")
-gg6
-dev.off()
-gg6
+gg7
+invisible(dev.off())
+gg7
 ```
 
-##########################################################################
-# Lasso #################################################################
-      
+```{r Different models, message=FALSE, warning=FALSE}
+results_real$order <- as.factor(results_real$order)
+gg8 <- ggplot(data = results_real[results_real$W == 1e-7 & results_real$order == 1,], aes(x = index)) + 
+    geom_point(aes(y = targets)) +
+    geom_line(aes(y = Estimate), col = colors[1], size = 1.5, alpha = .5) +
+    geom_line(aes(y = results_real[results_real$W == 1e5 & results_real$order == 5, "Estimate"]),
+              col = colors[2], size = 1.5, alpha = .5) +
+    geom_line(aes(y = c(rep(NA, 20), AR_model$predictions)), col = colors[3], size = 1.5, alpha = .5) +
+    scale_x_continuous(limits = c(50,95)) +
+    scale_y_continuous(limits = c( 700, 1500)) +
+    labs(x = "Month", y = "Index Value") +
+    theme_few()
+# Red = order 1, w 1e-7, Blue order = 5, w 1e5, green = AR order = 3
+png("DifferentModels.png")
+gg8
+invisible(dev.off())
+gg8
+```
+
+```{r Lasso Dataframe}
+# Produce a dataframe of residuals for each model
+Residuals <- data.frame(targets = targets)
+Residuals$Kalman1 <- targets - kalman(targets, 1, V, diag(1) * 1e-7, rep(1/2, 1), P = diag(1) * 0.1)$Estimate
+Residuals$Kalman5 <- targets - kalman(targets, 5, V, diag(5) * 1e5, rep(1/2, 5), P = diag(5) * 0.1)$Estimate
+Residuals$Kalman10 <- targets - kalman(targets, 10, V, diag(10) * 1e5, rep(1/2, 10), P = diag(10) * 0.1)$Estimate
+Residuals$AR3 <- c(rep(NA, 3), autoregression(targets, 3)$residuals)
+Residuals$ARIMA011 <- arima(targets, c(0L, 1L, 1L))$residuals
+Residuals$ARIMA022 <- arima(targets, c(0L, 2L, 2L))$residuals
+
+saveRDS(Residuals, "Residuals.rds")
+```
