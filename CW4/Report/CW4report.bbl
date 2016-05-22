@@ -1,0 +1,9 @@
+\begin{thebibliography}{1}
+
+\bibitem{mahler2009modeling}
+N.~Mahler.
+\newblock Modeling the s\&p 500 index using the kalman filter and the laglasso.
+\newblock In {\em Machine Learning for Signal Processing, 2009. MLSP 2009. IEEE
+  International Workshop on}, pages 1--6. IEEE, 2009.
+
+\end{thebibliography}

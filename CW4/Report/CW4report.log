@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2016.5.20)  20 MAY 2016 14:32
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2016.5.20)  22 MAY 2016 11:36
 entering extended mode
 **./CW4report.tex
 (CW4report.tex
@@ -208,110 +208,150 @@ Package: fontenc 2005/09/27 v1.99g Standard LaTeX package
 (D:\ProgramFiles\Latex\tex\latex\base\t1enc.def
 File: t1enc.def 2005/09/27 v1.99g Standard LaTeX file
 LaTeX Font Info:    Redeclaring font encoding T1 on input line 48.
-)) (CW4report.aux)
+))
+(D:\ProgramFiles\Latex\tex\latex\multirow\multirow.sty
+\bigstrutjot=\dimen123
+) (CW4report.aux)
 \openout1 = `CW4report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 6.
-LaTeX Font Info:    ... okay on input line 6.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 6.
-LaTeX Font Info:    ... okay on input line 6.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 6.
-LaTeX Font Info:    ... okay on input line 6.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 6.
-LaTeX Font Info:    ... okay on input line 6.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 6.
-LaTeX Font Info:    ... okay on input line 6.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 6.
-LaTeX Font Info:    ... okay on input line 6.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 7.
+LaTeX Font Info:    ... okay on input line 7.
 
 (D:\ProgramFiles\Latex\tex\context\base\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count110
-\scratchdimen=\dimen123
+\scratchdimen=\dimen124
 \scratchbox=\box30
 \nofMPsegments=\count111
 \nofMParguments=\count112
 \everyMPshowfont=\toks35
 \MPscratchCnt=\count113
-\MPscratchDim=\dimen124
+\MPscratchDim=\dimen125
 \MPnumerator=\count114
 \makeMPintoPDFobject=\count115
 \everyMPtoPDFconversion=\toks36
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 12.
+LaTeX Font Info:    Try loading font information for U+msa on input line 13.
  (D:\ProgramFiles\Latex\tex\latex\amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 12.
+LaTeX Font Info:    Try loading font information for U+msb on input line 13.
 
 (D:\ProgramFiles\Latex\tex\latex\amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for U+lasy on input line 12.
+LaTeX Font Info:    Try loading font information for U+lasy on input line 13.
 
 (D:\ProgramFiles\Latex\tex\latex\base\ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
-<Test_Weight_Estimation.png, id=1, 481.8pt x 481.8pt>
+<RMSE_order_real.png, id=1, 481.8pt x 481.8pt>
+File: RMSE_order_real.png Graphic file (type png)
+ <use RMSE_order_real.png>
+Package pdftex.def Info: RMSE_order_real.png used on input line 94.
+(pdftex.def)             Requested size: 240.0pt x 239.99515pt.
+
+<Test_Weight_Estimation.png, id=2, 481.8pt x 481.8pt>
 File: Test_Weight_Estimation.png Graphic file (type png)
 
 <use Test_Weight_Estimation.png>
-Package pdftex.def Info: Test_Weight_Estimation.png used on input line 89.
-(pdftex.def)             Requested size: 240.0pt x 239.99515pt.
+Package pdftex.def Info: Test_Weight_Estimation.png used on input line 103.
+(pdftex.def)             Requested size: 167.99927pt x 167.99292pt.
 
-Underfull \hbox (badness 1616) in paragraph at lines 91--91
-[]\T1/aer/bx/n/9 Figure 1: The pre-dic-tion of un-der-ly-ing auto-
+Underfull \hbox (badness 1616) in paragraph at lines 105--105
+[]\T1/aer/bx/n/9 Figure 2: The pre-dic-tion of un-der-ly-ing auto-
  []
 
-<W_variation.png, id=2, 481.8pt x 481.8pt>
+<W_variation.png, id=3, 481.8pt x 481.8pt>
 File: W_variation.png Graphic file (type png)
  <use W_variation.png>
-Package pdftex.def Info: W_variation.png used on input line 96.
-(pdftex.def)             Requested size: 240.0pt x 239.99515pt.
- [1{C:/Users/inbre/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}
+Package pdftex.def Info: W_variation.png used on input line 108.
+(pdftex.def)             Requested size: 167.99927pt x 167.99292pt.
 
-
-]
-<RMSE_order_real.png, id=19, 481.8pt x 481.8pt>
-File: RMSE_order_real.png Graphic file (type png)
- <use RMSE_order_real.png>
-Package pdftex.def Info: RMSE_order_real.png used on input line 105.
-(pdftex.def)             Requested size: 240.0pt x 239.99515pt.
-
-<DifferentModels.png, id=20, 481.8pt x 481.8pt>
+<DifferentModels.png, id=4, 481.8pt x 481.8pt>
 File: DifferentModels.png Graphic file (type png)
  <use DifferentModels.png>
 Package pdftex.def Info: DifferentModels.png used on input line 114.
+(pdftex.def)             Requested size: 167.99927pt x 167.99292pt.
+
+[1{C:/Users/inbre/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}
+
+
+] [2 <./RMSE_order_real.png> <./Test_Weight_Estimation.png> <./W_variation.png>
+ <./DifferentModels.png>] <TimeSeriesAR3.png, id=28, 722.7pt x 240.9pt>
+File: TimeSeriesAR3.png Graphic file (type png)
+
+<use TimeSeriesAR3.png>
+Package pdftex.def Info: TimeSeriesAR3.png used on input line 158.
+(pdftex.def)             Requested size: 240.0pt x 80.00082pt.
+ <TimeSeriesKalman1.png, id=29, 722.7pt x 240.9pt>
+File: TimeSeriesKalman1.png Graphic file (type png)
+
+<use TimeSeriesKalman1.png>
+Package pdftex.def Info: TimeSeriesKalman1.png used on input line 159.
+(pdftex.def)             Requested size: 240.0pt x 80.00082pt.
+ <TimeSeriesKalman5.png, id=30, 722.7pt x 240.9pt>
+File: TimeSeriesKalman5.png Graphic file (type png)
+
+<use TimeSeriesKalman5.png>
+Package pdftex.def Info: TimeSeriesKalman5.png used on input line 160.
+(pdftex.def)             Requested size: 240.0pt x 80.00082pt.
+ <TimeSeriesKalman10.png, id=31, 722.7pt x 240.9pt>
+File: TimeSeriesKalman10.png Graphic file (type png)
+
+<use TimeSeriesKalman10.png>
+Package pdftex.def Info: TimeSeriesKalman10.png used on input line 161.
+(pdftex.def)             Requested size: 240.0pt x 80.00082pt.
+ <Residuals.png, id=32, 481.8pt x 481.8pt>
+File: Residuals.png Graphic file (type png)
+
+<use Residuals.png>
+Package pdftex.def Info: Residuals.png used on input line 222.
 (pdftex.def)             Requested size: 240.0pt x 239.99515pt.
+ <count_Kalman10.png, id=33, 542.025pt x 240.9pt>
+File: count_Kalman10.png Graphic file (type png)
 
-[2 <./Test_Weight_Estimation.png> <./W_variation.png> <./RMSE_order_real.png>]
-[3
+<use count_Kalman10.png>
+Package pdftex.def Info: count_Kalman10.png used on input line 229.
+(pdftex.def)             Requested size: 240.0pt x 106.66531pt.
+ [3
 
- <./DifferentModels.png>]
-No file CW4report.bbl.
-(CW4report.aux) ) 
+ <./TimeSeriesAR3.png> <./TimeSeriesKalman1.png> <./TimeSeriesKalman5.png> <./T
+imeSeriesKalman10.png>] (CW4report.bbl) [4 <./Residuals.png> <./count_Kalman10.
+png>] [5] (CW4report.aux) ) 
 Here is how much of TeX's memory you used:
- 2575 strings out of 493634
- 30379 string characters out of 3146200
- 97749 words of memory out of 3000000
- 5912 multiletter control sequences out of 15000+200000
- 44181 words of font info for 63 fonts, out of 3000000 for 9000
+ 2635 strings out of 493634
+ 31513 string characters out of 3146200
+ 106989 words of memory out of 3000000
+ 5954 multiletter control sequences out of 15000+200000
+ 48817 words of font info for 69 fonts, out of 3000000 for 9000
  1025 hyphenation exceptions out of 8191
- 41i,15n,28p,1122b,226s stack positions out of 5000i,500n,10000p,200000b,50000s
-{D:/ProgramFiles/Latex/fonts/enc/dvips/fontname/8r.enc}<D:/Pro
-gramFiles/Latex/fonts/type1/public/amsfonts/cm/cmbx9.pfb><D:/ProgramFiles/Latex
-/fonts/type1/public/amsfonts/cmextra/cmex9.pfb><D:/ProgramFiles/Latex/fonts/typ
-e1/public/amsfonts/cm/cmmi6.pfb><D:/ProgramFiles/Latex/fonts/type1/public/amsfo
-nts/cm/cmmi9.pfb><D:/ProgramFiles/Latex/fonts/type1/public/amsfonts/cm/cmr6.pfb
-><D:/ProgramFiles/Latex/fonts/type1/public/amsfonts/cm/cmr9.pfb><D:/ProgramFile
-s/Latex/fonts/type1/public/amsfonts/cm/cmsy6.pfb><D:/ProgramFiles/Latex/fonts/t
-ype1/public/amsfonts/cm/cmsy9.pfb><D:/ProgramFiles/Latex/fonts/type1/public/ams
-fonts/cm/cmtt9.pfb><D:/ProgramFiles/Latex/fonts/type1/urw/helvetic/uhvb8a.pfb><
-D:/ProgramFiles/Latex/fonts/type1/urw/helvetic/uhvr8a.pfb><D:/ProgramFiles/Late
-x/fonts/type1/urw/times/utmb8a.pfb>
-Output written on CW4report.pdf (3 pages, 162998 bytes).
+ 41i,15n,28p,889b,244s stack positions out of 5000i,500n,10000p,200000b,50000s
+{D:/ProgramFiles/Latex/fonts/enc/dvips/fontname/8r.e
+nc}<D:/ProgramFiles/Latex/fonts/type1/public/amsfonts/cm/cmbx9.pfb><D:/ProgramF
+iles/Latex/fonts/type1/public/amsfonts/cmextra/cmex9.pfb><D:/ProgramFiles/Latex
+/fonts/type1/public/amsfonts/cm/cmmi6.pfb><D:/ProgramFiles/Latex/fonts/type1/pu
+blic/amsfonts/cm/cmmi9.pfb><D:/ProgramFiles/Latex/fonts/type1/public/amsfonts/c
+m/cmr6.pfb><D:/ProgramFiles/Latex/fonts/type1/public/amsfonts/cm/cmr9.pfb><D:/P
+rogramFiles/Latex/fonts/type1/public/amsfonts/cm/cmsy6.pfb><D:/ProgramFiles/Lat
+ex/fonts/type1/public/amsfonts/cm/cmsy9.pfb><D:/ProgramFiles/Latex/fonts/type1/
+public/amsfonts/cm/cmti9.pfb><D:/ProgramFiles/Latex/fonts/type1/public/amsfonts
+/cm/cmtt9.pfb><D:/ProgramFiles/Latex/fonts/type1/urw/helvetic/uhvb8a.pfb><D:/Pr
+ogramFiles/Latex/fonts/type1/urw/helvetic/uhvr8a.pfb><D:/ProgramFiles/Latex/fon
+ts/type1/urw/times/utmb8a.pfb>
+Output written on CW4report.pdf (5 pages, 219340 bytes).
 PDF statistics:
- 69 PDF objects out of 1000 (max. 8388607)
+ 91 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 51 words of extra memory for PDF output out of 10000 (max. 10000000)
 

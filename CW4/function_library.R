@@ -82,3 +82,10 @@ simulation <- function(dat_len, weights, noise_mean, noise_var) {
     
     return(targets)
 }
+
+rsquared <- function(predictions, targets) {
+    yhat <- mean(targets, na.rm = T) 
+    SSE <- sum((predictions - yhat)^2, na.rm = T)
+    SST <- sum((targets - yhat)^2, na.rm = T)
+    return(SSE/SST)
+}

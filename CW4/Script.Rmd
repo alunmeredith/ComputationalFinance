@@ -118,7 +118,7 @@ gg3
 # REAL DATA
 
 ```{r Read data} 
-dat_raw <- read_csv("S&P500.csv")
+dat_raw <- read_csv("S&P1999-2009.csv")
 targets <- (dat_raw$Close)
 ```
 

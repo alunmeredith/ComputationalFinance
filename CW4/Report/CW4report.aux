@@ -3,14 +3,32 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Auto-regressive models}{\thepage }}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Kalman Filtering}{\thepage }}
 \newlabel{simulation}{{6}{\thepage }}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The prediction of underlying auto-regression weights from Kalman filtering over time for simulated data \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces 6\hbox {}\unskip \@@italiccorr )}} (W = 1e-4)}}{\thepage }}
-\newlabel{fig:Weight_Estimation}{{1}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Lasso Regularisation}{\thepage }}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The Kalman smoothing vs. observed values for a variety of W values for simulated data \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces 6\hbox {}\unskip \@@italiccorr )}}}}{\thepage }}
-\newlabel{fig:W_variation}{{2}{\thepage }}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces RMSE of Kalman smoothing and AutoRegression against Historic Data for a variety of orders and W values, x value is "jittered" to show overlapping points clearly}}{\thepage }}
-\newlabel{fig:RMSE_real}{{3}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3}Filtering on S\&P 500}{\thepage }}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces RMSE of Kalman smoothing and AutoRegression against Historic Data for a variety of orders and W values, x value is "jittered" with some random noise to show overlapping points}}{\thepage }}
+\newlabel{fig:RMSE_real}{{1}{\thepage }}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The prediction of underlying auto-regression weights from Kalman filtering over time for simulated data \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces 6\hbox {}\unskip \@@italiccorr )}} (W = 1e-4)}}{\thepage }}
+\newlabel{fig:Weight_Estimation}{{2}{\thepage }}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces The Kalman smoothing vs. observed values for a variety of W values for simulated data \textup  {\hbox {\mathsurround \z@ \normalfont  (\ignorespaces 6\hbox {}\unskip \@@italiccorr )}}}}{\thepage }}
+\newlabel{fig:W_variation}{{3}{\thepage }}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Effects of smoothing for: \textbf  {Kalman} Order 1, W 1e-7 (red), \textbf  {Kalman} Order 5, W 1e5 (blue) and \textbf  {Autoregression}, Order 3 (green). On a subset of the data (Months 50-100, chosen to give Kalman filters enough time to train and capture shifts in the direction of the data)}}{\thepage }}
 \newlabel{fig:DifferentModels}{{4}{\thepage }}
+\citation{mahler2009modeling}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Lasso Regularisation}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Method}{\thepage }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Results}{\thepage }}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Periods in which each variable is relevant to the sliding window Lasso regularised model for each set of residuals.}}{\thepage }}
+\newlabel{fig:Window}{{5}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Conclusion}{\thepage }}
 \bibstyle{abbrv}
 \bibdata{sigproc}
+\bibcite{mahler2009modeling}{1}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces P values and R squared values for each of 4 models trained on the whole timeseries. In each case lasso regularisation occurs with parameter $\lambda $ trained by minimising mean-squared error through 5-fold cross validation. }}{\thepage }}
+\newlabel{table:fengineering}{{1}{\thepage }}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces P values and R-squareds for predictions trained on a sliding window of previous 50 Months}}{\thepage }}
+\newlabel{table:window.results}{{2}{\thepage }}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Size of residuals for each model and prediction of Kalman10 residuals by Lasso regularisation}}{\thepage }}
+\newlabel{fig:Residuals}{{6}{\thepage }}
+\@writefile{toc}{\contentsline {section}{\numberline {4}References}{\thepage }}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Number of times that each variable is selected by minimising MSE through lasso regularisation over the sliding window}}{\thepage }}
+\newlabel{fig:counts}{{7}{\thepage }}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces caption blah}}{\thepage }}
