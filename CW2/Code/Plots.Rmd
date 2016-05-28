@@ -155,7 +155,7 @@ gg7
 
 # Question 5
 
-```{r}
+```{r, eval=FALSE, include=FALSE}
 # Graph 1  
 ###########################
 # Randomly sampled (bootstrapped) volatilities with fixed other parameters comparing black scholes and binomial absolute error to show they converge as dt approaches 0. 
@@ -163,20 +163,23 @@ gg7
 Abs_diff <- bin_v_bs$Binomial - bin_v_bs$BlackScholes
 
 diff_tall <- tidyr::gather(as.data.frame(Abs_diff), n, difference)
-diff_tall$n <- stringr::str_extract(diff_tall$n, "[0-9]") %>% as.numeric
+diff_tall$n <- stringr::str_extract(diff_tall$n, "[0-9]+") %>% as.numeric
 
 t_left <- t_mat - bin_v_bs$option$date
+
 dat <- diff_tall %>% 
     group_by(n) %>% 
     summarise(mean = mean(difference), err = se(difference)) %>%
     mutate(dt = t_left/n)
 
 gg8 <- ggplot(data = dat, aes(x = dt, y = mean)) +
-    geom_errorbar(aes(ymin = mean - 2*err, ymax = mean + 2*err), width = 1) +
+    #geom_errorbar(aes(ymin = mean - 2*err, ymax = mean + 2*err), width = 1) +
+    geom_point() +
     xlab("dt (days)") +
     ylab("Absolute Error") +
     geom_hline(yintercept = 0, linetype = "dashed") +
     ylim(-1,0.25) +
+    xlim(1,50) +
     theme_few()
 gg8
 ```
