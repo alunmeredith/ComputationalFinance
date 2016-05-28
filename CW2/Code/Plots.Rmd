@@ -1,0 +1,259 @@
+---
+title: "Options Pricing"
+output: html_notebook
+--- 
+
+In this report we explore the problem of options pricing using both a closed form solution (Black-Scholes model) and simulations (lattice model) for European and American derivatives on historic data. 
+
+In this script we produce the plots used for the main report, after the data has been processed. 
+```{r Libraries, message=FALSE, warning=FALSE, include=FALSE}
+library(ggplot2)
+library(ggthemes)
+library(dplyr)
+library(tidyr)
+```
+
+Initially we load the data, and change the name of a variable to be more descriptive. The global variables loaded are the interest rate r `r r`, time to maturity t\_mat and an index train\_ii which indicates if the observation is part of the training set or test set. The two data frames being loaded are tidy\_data which is a tidy data frame storing observations of date, asset vale etc. for with each of the 10 options being analysed stored on top of eachother vertically. Finally bin\_v\_bs bootstrapps volatilities to compare binomial and black sholes (BS). 
+```{r Load Data}
+load("tidy_data_fin.RData")
+rm(asset)
+
+# Change putcall labels to full words for facet plot labels
+tidy_data$putcall <- sub("^p$", "Put", tidy_data$putcall) 
+tidy_data$putcall <- sub("^c$", "Call", tidy_data$putcall)
+
+volatility_smile$putcall <- sub("^p$", "Put", volatility_smile$putcall) 
+volatility_smile$putcall <- sub("^c$", "Call", volatility_smile$putcall)
+```
+
+Here we explore the relationship between profit and final stock price for an example portfolio of two put and call options with the same price on the same underlying asset. 
+
+This demonstrates that one of the main appeals of options is as a buffer against high variance, because in the figure you can create portfolios which are in the money if asset prices vary outside a set window, but this costs you if they do not. 
+```{r Inthemoney plot, message=FALSE}
+# Define paramaters
+opt_prices = 5
+
+# Function to calculate profit
+profit <- function(x, fixed_cost = opt_prices) {
+    ifelse(x < 40,
+           40 - x - fixed_cost, 
+           ifelse(x > 45,
+                  x -  45 - fixed_cost,
+                  - fixed_cost))
+}
+
+# Plot
+range <- data.frame(x = 30:55)
+gg1 <- ggplot(range, aes(x)) +
+    stat_function(fun = profit, size = 1.5) +
+    labs(x = "Final Stock Price", y = "Profit") +
+    geom_vline(xintercept = 40, linetype = 2, alpha = 0.5) +
+    geom_vline(xintercept = 45, linetype = 2, alpha = 0.5) +
+    annotate("text", x = mean(c(min(range), 40)), y = 4.5, 
+             label = "Put option \n in the money") +
+    annotate("text", x = mean(c(max(range), 45)), y = 4.5, 
+             label = "Call option \n in the money") +
+    theme_few()
+
+gg1
+```
+# 2. Evaluating BS
+
+In this question we are trying to evaluate how well Black-Scholes approximates the option prices. To do this we must first calculate a value of volatility, the only parameter of Black-Scholes which isn't explicitly known. This is calculated over a sliding window of T/4 using the following formulae (source: Hull):
+$$ u_i = ln(\frac{S_i}{S_{i-1}}) $$
+$$ \hat{\sigma} = \frac{sd(u)}{\sqrt{\tau}}$$
+
+Below we can see how volatillity varies over the life of our options in contrast to asset value. 
+```{r Historic-Volatility}
+dat <- dplyr::filter(tidy_data, id == "c3125") %>%
+    dplyr::select(date, volatility, asset_value) %>%
+    gather(value, stat, -date)
+gg2 <- ggplot(data = dat, aes(x = date, y = stat)) + 
+    geom_line() + 
+    facet_wrap(~value, nrow = 2, scales = "free_y") +
+    ylab("") +
+    ggthemes::theme_few()
+gg2
+```
+
+For each option we compute the error in the Black-Scholes estimate versus the obsererved price. T
+```{r BS-error}
+# Plot estimated vs observed for each stock
+gg3 <- ggplot(tidy_data, aes(x = date, y = fOption_estimate - option_price)) +
+    geom_line() +
+    facet_wrap(~id, nrow = 2) +
+    geom_hline(yintercept = 0, linetype = "dotted") +
+    labs(x = "Date", y = "Error") + 
+    theme_few() + 
+    scale_colour_continuous(low = "black")
+gg3
+```
+
+In the above graph there appears to be a pattern in which the error becomes less negative with increasing strike price. Here we look at the average of the whole time series for each strike price to quantify this effect. Observing the graph below there seems to also be an absolute shift between call and put. 
+```{r error vs strike}
+# Summary data
+se <- function(x) sqrt(var(na.omit(x))/length(na.omit(x)))
+sum_dat <- tidy_data %>% group_by(id) %>% 
+    summarise(err = mean(fOption_estimate - option_price, na.rm = T),
+              err_se = se(fOption_estimate - option_price),
+              putcall = sample(putcall, 1),
+              strike = sample(strike_price, 1))
+
+gg4 <- ggplot(sum_dat, aes(x = strike, y = err)) +
+    geom_errorbar(aes(ymin = err - 2*err_se, ymax = err + 2*err_se), width = 20) +
+    geom_point() +
+    facet_wrap(~putcall, nrow = 1) + 
+    geom_hline(yintercept = 0, linetype = "dotted") +
+    theme_few() + 
+    ylab("Error") +
+    xlab("Strike Price")
+gg4
+```
+
+```{r prob in the money, eval=FALSE, include=FALSE}
+#
+gg5 <- ggplot(tidy_data, aes(x = date, y = in_the_money)) + 
+    facet_wrap(~id, nrow = 2) + 
+    geom_line() +
+    theme_few() +
+    ylab("probability in the money")
+gg5
+```
+
+# 3. Implied Volatility
+
+The Black Scholes equation (BS) has two unknowns, the price and the volatility. In the above section volatility was estimated to evaluate the price. In this section we explore using the price to evaluate the volatility. 
+
+In the plot below we compare the implied to the historic volatility for each option. The y = x line is shown but the plots below seem to show the dominant effect that implied volatility varies much more than historic.
+```{r historic vs implied}
+# Plot estimated vs observed for each stock
+gg6 <- 
+    ggplot(data = tidy_data,
+           mapping = aes(x = volatility, y = fOption_implied, colour = date)) +
+    geom_point() + 
+    facet_wrap(~id, nrow = 2) +
+    geom_abline(intercept = 0, slope = 1, linetype = "dotted") +
+    xlim(c(0,.3)) + ylim(c(0,.2)) +
+    labs(x = "Historic Volatility", y = "Implied Volatility") +
+    theme_few()
+gg6
+```
+
+The above plto showed a clear variation in strike price between the difference in implied and historic volatility and that this is brought about by the fact that strike price effects implied volatility. This dependency is known as a "Volatility Smile" and we quantify it below. Interestingly put and call options should have the same implied volatility but only one of our points have overlapping confidence intervals. 
+```{r Volatility Smile}
+# Are there systematic differences between options of different strike prices on any particular day. "Volatility Smile".
+gg7 <- 
+    ggplot(data = volatility_smile, mapping = aes(x = strike, y = av_implied, colour = putcall)) +
+    geom_point() +
+    geom_errorbar(aes(ymin = av_implied - 2*se_implied, ymax = av_implied + 2*se_implied)) +
+    #acet_wrap(~putcall, nrow = 2, scales = "free") +
+    labs(x = "Strike Price", y = "Implied Volatility") +
+    theme_few() +
+    scale_color_grey()
+gg7
+```
+
+# Question 5
+
+```{r}
+# Graph 1  
+###########################
+# Randomly sampled (bootstrapped) volatilities with fixed other parameters comparing black scholes and binomial absolute error to show they converge as dt approaches 0. 
+
+Abs_diff <- bin_v_bs$Binomial - bin_v_bs$BlackScholes
+
+diff_tall <- tidyr::gather(as.data.frame(Abs_diff), n, difference)
+diff_tall$n <- stringr::str_extract(diff_tall$n, "[0-9]") %>% as.numeric
+
+t_left <- t_mat - bin_v_bs$option$date
+dat <- diff_tall %>% 
+    group_by(n) %>% 
+    summarise(mean = mean(difference), err = se(difference)) %>%
+    mutate(dt = t_left/n)
+
+gg8 <- ggplot(data = dat, aes(x = dt, y = mean)) +
+    geom_errorbar(aes(ymin = mean - 2*err, ymax = mean + 2*err), width = 1) +
+    xlab("dt (days)") +
+    ylab("Absolute Error") +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    ylim(-1,0.25) +
+    theme_few()
+gg8
+```
+
+```{r}
+gg9 <- ggplot(dplyr::filter(tidy_data, putcall == "Call"), 
+             aes(y = fOption_estimate)) + 
+    geom_boxplot(aes(y = fOption_estimate - binom0.5, x = 2), outlier.size = .2) +
+    geom_boxplot(aes(y = fOption_estimate - binom0.1, x = 10), outlier.size = .2) +
+    geom_boxplot(aes(y = fOption_estimate - binom0.25, x = 4), outlier.size = .2) +
+    geom_boxplot(aes(y = fOption_estimate - binom0.125, x = 8), outlier.size = .2) +
+    xlab("dt (days)") +
+    ylab("Black Scholes - Binomial option price") +
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    theme_few()
+gg9
+```
+
+# Question 6 
+
+```{r}
+# Graph 1
+###########################
+# Compare american vs European option prices using fOptions to show for each option american prices are always higher 
+#100 * (binom1 - binom1_american)/binom1)
+dat <- dplyr::filter(tidy_data, putcall == "Put")
+gg10 <- ggplot(dat, aes(x = date, y = binom1_american - binom1)) + 
+    facet_wrap(~id, nrow = 1) + 
+    geom_line() +
+    ylab("Estimated American - European Option value") +
+    theme_few() +
+    geom_hline(yintercept = 0, linetype = "dashed")
+gg10
+```
+
+```{r Save plots, message=FALSE, warning=FALSE, include=FALSE}
+# Define the default dimensions for images. 
+image_size <- 240
+
+jpeg(file = "../Plots/Q1_1.jpg", width = image_size, height = image_size)
+gg1
+dev.off()
+
+jpeg(file = "../Plots/Q2_1.jpg", width = image_size, height = image_size)
+gg2
+dev.off()
+
+jpeg(file = "../Plots/Q2_2.jpg", width = image_size*2, height = image_size)
+gg3
+dev.off()
+
+jpeg(file = "../Plots/Q2_3.jpg", width = image_size* 2, height = image_size)
+gg4
+dev.off()
+
+jpeg(file = "../Plots/Q2_4.jpg", width = image_size* 3, height = image_size)
+gg5
+dev.off()
+
+jpeg(file = "../Plots/Q3_1.jpg", width = image_size* 2, height = image_size)
+gg6
+dev.off()
+
+jpeg(file = "../Plots/Q3_2.jpg", width = image_size * 1.5, height = image_size)
+gg7
+dev.off()
+
+jpeg(file = "../Plots/Q5_1.jpg", width = image_size * 1.5, height = image_size)
+gg8
+dev.off()
+
+jpeg(file = "../Plots/Q5_2.jpg", width = image_size * 1.5, height = image_size)
+gg9
+dev.off()
+
+jpeg(file = "../Plots/Q6_1.jpg", width = image_size * 4, height = image_size)
+gg10
+dev.off()
+```
+
