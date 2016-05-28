@@ -1,0 +1,129 @@
+---
+title: "Pre-Processing"
+output: html_notebook
+---
+```{r Libraries, message=FALSE, warning=FALSE, include=FALSE}
+library(stringr)
+library(tidyr)
+library(dplyr)
+
+knitr::opts_chunk$set(warning = F, message = F, results = "hold")
+```
+
+This notebook preprocesses the data for CW2. The input data is a set of CSVs for a set of options on the FTSE-100 index over the same time period with different strike prices. The csv files have an integer date an option price and an asset value. 
+
+* From the file names strike price and "put" or "call" is extracted. 
+* the integer date is set to start from 0. 
+* The resulting data frame is a "long" format. I.e. different options are stacked veritcally. 
+```{r read into tidy format}
+# Read file names and directories
+file_names <- list.files("../Data/Raw", full.names = T)
+names <- str_extract(file_names, "[cp][0-9]{4}")
+
+# Build a list of data frames for each option
+daily_prices <- list()
+for (ii in seq_along(file_names)) {
+    tmp <- read.table(file_names[ii],
+                      col.names = c("date", "option_price", "asset_value"))
+    # Changed date to number of days from start indexed at 0
+    tmp$date <- tmp$date - min(tmp$date)
+    tmp$id <- names[ii]
+    daily_prices[[names[ii]]] <- tmp
+}
+
+# Merge together
+tidy_data <- Reduce(function(...) rbind(...), daily_prices)
+tidy_data$id <- as.factor(tidy_data$id)
+
+# Parse the file names to assign put/call and strike price attributes
+tidy_data <- mutate(tidy_data, putcall = str_extract(id, "[cp]"),
+                    strike_price = as.numeric(str_extract(id, "[0-9]{4}"))
+)
+
+str(tidy_data)
+```
+
+Because the above is a "long" format, we also create a "wide" format in which each option price is its own variable. And a data frame of the constant values, date and asset value and record the time to maturity t_mat. The time to maturity is given as the day after the options end.  
+```{r wide}
+data_wide <- tidy_data %>%
+    select(-c(putcall, strike_price)) %>%
+    spread(id, option_price)
+
+asset <- data.frame(date = data_wide$date,
+                   value = data_wide$asset_value)
+
+t_mat <- length(asset$date) + 1
+
+str(data_wide)
+str(asset)
+t_mat
+```
+
+Next we compute log returns and historic volatilities (along with their standard errors) for the underlying asset. We use a sliding window of size T/4. We can see the mean volatilitiy and error returned below. The first T/4 values are NA. 
+```{r returns and volatilities}
+# Find subset of date in training set
+# index of evaluation set (t > t_mat/4) i.e. latter 3/4 of data
+t_quarter <- ceiling(t_mat / 4)
+
+# Specify the minimum date in time window 
+asset$lag_date <- asset$date - t_quarter
+ind <- asset$lag_date < 0
+asset$lag_date[ind] <- NA
+
+# Log returns
+asset$log_returns <-  c(NA, diff(log(asset$value)))
+
+# Volatilities and standard error along window 
+volatilities_raw <- apply(asset, 1, function(x) {
+    
+    # Account for gaps of up to 4 days
+    if (!(x[["lag_date"]] %in% asset$date)) {
+        for (i in 1:4) {
+            if ((x[["lag_date"]] + i) %in% asset$date) {
+                x[["lag_date"]] <- x[["lag_date"]] + i
+                break
+            }
+            if (i == 4) return(list(volatility = NA, volatility_se = NA))
+        }
+    }
+
+    # Compute time window
+    min <- which(asset$date == x[["lag_date"]])
+    max <- which(asset$date == x[["date"]])
+    window <- asset$log_returns[min:max]
+    
+    #
+    s <- sd(window, na.rm = T)
+    tau <- ((asset$date[max] - asset$date[min]) / length(window)) / 365
+    vol <- s / sqrt(tau) # volatility
+    vol_se <- vol / sqrt(2 * length(window)) # standard error
+    return(list(volatility = vol, volatility_se = vol_se))
+})
+
+volatilities <- volatilities_raw %>%
+    unlist() %>%
+    matrix(nrow = 2) %>%
+    t() %>%
+    as.data.frame()
+names(volatilities) <- c("volatility", "volatility_se")
+
+summary(volatilities)
+```
+
+We combine the wide data (asset) and the tall data (tidy_data) with the computed volatilities. As well as create an index to remove the first T/4 values which do not have computed volatilities. 
+```{r combine}
+# Combine volatility output into asset dataframe (and wide option values)
+
+asset <- bind_cols(asset, volatilities)
+asset <- left_join(asset, data_wide)
+tidy_data <- full_join(select(asset, date, volatility, volatility_se), tidy_data)
+train_ii <- !is.na(asset$volatility)
+
+str(tidy_data)
+str(asset)
+```
+Finally save the long wide and training set index. 
+```{r save}
+save(asset, tidy_data, train_ii, file = "../Data/tidy_data.RData")
+```
+

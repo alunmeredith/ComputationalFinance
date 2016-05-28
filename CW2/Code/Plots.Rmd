@@ -1,6 +1,8 @@
 ---
 title: "Options Pricing"
-output: html_notebook
+output:
+  html_notebook: default
+  pdf_document: default
 --- 
 
 In this report we explore the problem of options pricing using both a closed form solution (Black-Scholes model) and simulations (lattice model) for European and American derivatives on historic data. 
@@ -11,11 +13,12 @@ library(ggplot2)
 library(ggthemes)
 library(dplyr)
 library(tidyr)
+knitr::opts_chunk$set(warning = F)
 ```
 
-Initially we load the data, and change the name of a variable to be more descriptive. The global variables loaded are the interest rate r `r r`, time to maturity t\_mat and an index train\_ii which indicates if the observation is part of the training set or test set. The two data frames being loaded are tidy\_data which is a tidy data frame storing observations of date, asset vale etc. for with each of the 10 options being analysed stored on top of eachother vertically. Finally bin\_v\_bs bootstrapps volatilities to compare binomial and black sholes (BS). 
+Initially we load the data, and change the name of a variable to be more descriptive. The global variables loaded are the interest rate r, time to maturity t\_mat and an index train\_ii which indicates if the observation is part of the training set or test set. The two data frames being loaded are tidy\_data which is a tidy data frame storing observations of date, asset vale etc. for with each of the 10 options being analysed stored on top of eachother vertically. Finally bin\_v\_bs bootstrapps volatilities to compare binomial and black sholes (BS). 
 ```{r Load Data}
-load("tidy_data_fin.RData")
+load("../Data/tidy_data_fin.RData")
 rm(asset)
 
 # Change putcall labels to full words for facet plot labels
@@ -59,7 +62,14 @@ gg1
 ```
 # 2. Evaluating BS
 
-In this question we are trying to evaluate how well Black-Scholes approximates the option prices. To do this we must first calculate a value of volatility, the only parameter of Black-Scholes which isn't explicitly known. This is calculated over a sliding window of T/4 using the following formulae (source: Hull):
+In this question we are trying to evaluate how well Black-Scholes approximates the option prices using the following closed form solutions: 
+
+$$ c = SN(d_1) - Ke^{-r(T-t)}N(d_2) $$
+$$ p = N(-d_2)Ke^{-r(T-t)-N(-d_1)S} $$
+$$ d_1 = \frac{log(S/K) + r \sigma^2/2)(T-t)}{\sigma \sqrt{T-t}} $$
+$$ d_2 = d_1 - \sigma\sqrt{T-t}$$
+
+To do this we must first calculate a value of volatility, the only parameter of Black-Scholes which isn't explicitly known. This is calculated over a sliding window of T/4 using the following formulae (source: Hull):
 $$ u_i = ln(\frac{S_i}{S_{i-1}}) $$
 $$ \hat{\sigma} = \frac{sd(u)}{\sqrt{\tau}}$$
 
@@ -110,8 +120,9 @@ gg4 <- ggplot(sum_dat, aes(x = strike, y = err)) +
 gg4
 ```
 
-```{r prob in the money, eval=FALSE, include=FALSE}
-#
+In the black scholes equations $ d_1, $ can be interpreted as similar to the probability of the stock being "in the money". The below plot shows how this probability changes over time for the different options. 
+
+```{r prob in the money}
 gg5 <- ggplot(tidy_data, aes(x = date, y = in_the_money)) + 
     facet_wrap(~id, nrow = 2) + 
     geom_line() +
@@ -139,7 +150,7 @@ gg6 <-
 gg6
 ```
 
-The above plto showed a clear variation in strike price between the difference in implied and historic volatility and that this is brought about by the fact that strike price effects implied volatility. This dependency is known as a "Volatility Smile" and we quantify it below. Interestingly put and call options should have the same implied volatility but only one of our points have overlapping confidence intervals. 
+The above plot showed a clear variation in strike price between the difference in implied and historic volatility and that this is brought about by the fact that strike price effects implied volatility. This dependency is known as a "Volatility Smile" and we quantify it below. Interestingly put and call options should have the same implied volatility but only one of our points have overlapping confidence intervals. 
 ```{r Volatility Smile}
 # Are there systematic differences between options of different strike prices on any particular day. "Volatility Smile".
 gg7 <- 
@@ -153,9 +164,15 @@ gg7 <-
 gg7
 ```
 
-# Question 5
+# 5. BS vs Binomial
 
-```{r, eval=FALSE, include=FALSE}
+In this section we consider an alternative to the black-scholes closed form solutions through a binomial lattice model. The binomial lattice model considers a tree structure where at each time interval dt the price can either increase or decrease with fixed probability. 
+
+We compare the two methods and try to show that as dt approaches 0 the two methods converge. 
+
+In the below plot we take one of our historical options (one day) and bootstrapp sample a set of volatilitilies. In this way only volatility is being varied but from our observed set. We can then compare the results of this simulated set betweeen binomaial and closed form soutions. 
+
+```{r Bin_vs_BS bootstrapped}
 # Graph 1  
 ###########################
 # Randomly sampled (bootstrapped) volatilities with fixed other parameters comparing black scholes and binomial absolute error to show they converge as dt approaches 0. 
@@ -183,8 +200,10 @@ gg8 <- ggplot(data = dat, aes(x = dt, y = mean)) +
     theme_few()
 gg8
 ```
+TODO:: in the above plot we see...
 
-```{r}
+We can also consider the historic options to see if this effect is present here. Although there are large error margins and historic values of dt are of smaller variation it is apparent the error is converging as dt approaches 0. 
+```{r Bin_vs_Vs historic}
 gg9 <- ggplot(dplyr::filter(tidy_data, putcall == "Call"), 
              aes(y = fOption_estimate)) + 
     geom_boxplot(aes(y = fOption_estimate - binom0.5, x = 2), outlier.size = .2) +
@@ -198,11 +217,10 @@ gg9 <- ggplot(dplyr::filter(tidy_data, putcall == "Call"),
 gg9
 ```
 
-# Question 6 
+# 6. EUvs US options
 
-```{r}
-# Graph 1
-###########################
+The additonal freedom of american style options inherently means they are at least as valuable as the european option. Here we compare the additional value of american options for our put options over time. We see the expected effect that close to maturity the difference becomes 0 because the additional value of american options is based on the potential future volatilitiy of the option. Also as the option becomes more in the money the value difference increases. 
+```{r US vs EU}
 # Compare american vs European option prices using fOptions to show for each option american prices are always higher 
 #100 * (binom1 - binom1_american)/binom1)
 dat <- dplyr::filter(tidy_data, putcall == "Put")
