@@ -1,7 +1,7 @@
 # ComputationalFinance
 Repository for the computational finance module in the Southampton Data Science Masters
 
-[Aims and Objectives](http://www.ecs.soton.ac.uk/module/COMP6212#aims_%26amp%3B_objectives)
+## [Aims and Objectives](http://www.ecs.soton.ac.uk/module/COMP6212#aims_%26amp%3B_objectives)
 
 Demonstrate knowledge and understanding of: 
 
@@ -9,7 +9,7 @@ Demonstrate knowledge and understanding of:
  * The mathematical tools, and their computational implementations underlying the subject. 
  * Implement a simulated fund management system that uses real-life data from the stock exchange. 
 
-Syllabus:
+## Syllabus:
  
  1. Mathematical preliminaries
 	 * Numerical analaysis
@@ -33,7 +33,7 @@ Syllabus:
  	* Options pricing by Monte Carlo methods
 
 
-## CW1: Portfolio Optimisation [Specification]() [Report]() (Grade: 30/30)
+## CW1: Portfolio Optimisation ([Specification](https://github.com/alunmeredith/ComputationalFinance/blob/master/CW1/Specification.pdf) [Report](https://github.com/alunmeredith/ComputationalFinance/blob/master/CW1/report.pdf) Grade: 30/30)
 This cousework aimed to analyse standard methods of producing efficient portfolios:
 
  * A naive, evenly spread portfolio. 
@@ -43,11 +43,11 @@ This cousework aimed to analyse standard methods of producing efficient portfoli
 
  Each of these were computed on historic data and the results were compared / critically analysed, discussing where each succeeds and fails as well as how they differ in theory vs. practice. 
 
-## CW2: Options pricing [Specification]() [Report]() (Grade: 30/30)
+## CW2: Options pricing ([Specification](https://github.com/alunmeredith/ComputationalFinance/blob/master/CW2/Spec.pdf) [Report](https://github.com/alunmeredith/ComputationalFinance/blob/master/CW2/Report.pdf) Grade: 30/30)
 This coursework looks at computing options pricing using Black-Scholes and Binomial lattice methods. This is compared to real data and the limits of these methods are discussed: observing volatility smiles, comparing the differences between European and American options and methods for estimating volatility.
 
-## CW3 Non-parametric options pricing [Specification]() [Report]() (Grade: 15/15)
+## CW3 Non-parametric options pricing ([Specification](https://github.com/alunmeredith/ComputationalFinance/blob/master/CW3/Specification.pdf) [Report](https://github.com/alunmeredith/ComputationalFinance/blob/master/CW3/Report.pdf) Grade: 15/15)
 In this coursework we consider learning options pricing through a neural network approach. We train historic data using a gaussian mixture model. We discuss the effecitveness of such models and the contrast with parametric simpler models from the previous coursework. 
 
-## CW4 Kalman Filtering and Lasso Regularisation [Specification]() [Report]() (Grade: 25/25)
+## CW4 Kalman Filtering and Lasso Regularisation ([Specification](https://github.com/alunmeredith/ComputationalFinance/blob/master/CW4/Specification.pdf) [Report](https://github.com/alunmeredith/ComputationalFinance/blob/master/CW4/CW4report.pdf) Grade: 25/25)
 In this coursework we build a Kalman filter to filter the noise from historic index prices. We investigate the residuals of this filter to link them to econometric variables such as oil price. To do this a lasso regularisation model is built. 
