@@ -1,4 +1,7 @@
 # ComputationalFinance
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/96d93cb4c97b4a26b4ba71a0f8e2ba46)](https://www.codacy.com/app/alunmeredith/ComputationalFinance?utm_source=github.com&utm_medium=referral&utm_content=alunmeredith/ComputationalFinance&utm_campaign=badger)
+
 Repository for the computational finance module in the Southampton Data Science Masters
 
 ## [Aims and Objectives](http://www.ecs.soton.ac.uk/module/COMP6212#aims_%26amp%3B_objectives)
